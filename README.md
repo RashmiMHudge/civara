@@ -1,10 +1,12 @@
 # Civara
 
-Civara is a full-stack society management platform with:
+Civara is a full-stack society management platform built with:
 
-- a Node.js / Express backend
-- a React frontend
-- n8n workflow support for automation
+- React frontend
+- Node.js / Express backend
+- MongoDB Atlas for data storage
+- n8n for workflow automation
+- Twilio for calling and phone-based notifications
 
 ## Project Structure
 
@@ -17,7 +19,7 @@ Civara is a full-stack society management platform with:
 
 - Node.js 18+ recommended
 - npm
-- MongoDB for the backend
+- MongoDB Atlas connection string for the backend
 - Docker if you want to run n8n with the provided compose file
 
 ## Backend Setup
@@ -53,6 +55,12 @@ docker compose -f docker-compose.n8n.yml up -d
 ```
 
 This maps n8n to port `5678` and stores its data in `n8n_data/`.
+
+## Automation And Calling
+
+- Complaint and emergency flows can trigger n8n webhooks.
+- n8n can call external services such as Twilio for voice calls or message workflows.
+- The backend reads webhook and automation secrets from environment variables.
 
 ## Notes
 
