@@ -82,10 +82,20 @@ export default function ComplaintDetail() {
 
   const formatResidentLocation = (complaint) => {
     const explicitLocation = String(complaint?.location || "").trim();
-    if (explicitLocation) return explicitLocation;
-
     const block = String(complaint?.resident?.block || "").trim();
     const flat = String(complaint?.resident?.flat || "").trim();
+    const residentUnit = block && flat ? `${block}-${flat}` : flat || block;
+
+    if (explicitLocation && residentUnit) return `${explicitLocation} (${residentUnit})`;
+    if (explicitLocation) return explicitLocation;
+    if (residentUnit) return residentUnit;
+
+    return "-";
+  };
+
+  const formatResidentUnit = (resident) => {
+    const block = String(resident?.block || "").trim();
+    const flat = String(resident?.flat || "").trim();
 
     if (block && flat) return `${block}-${flat}`;
     return flat || block || "-";
@@ -432,6 +442,10 @@ export default function ComplaintDetail() {
           <div className="detail-item">
             <label>Category</label>
             <p>{complaint.category || "-"}</p>
+          </div>
+          <div className="detail-item">
+            <label>Resident Unit</label>
+            <p>{formatResidentUnit(resident)}</p>
           </div>
           <div className="detail-item">
             <label>Location</label>

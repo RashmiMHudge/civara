@@ -1,6 +1,6 @@
 # Civara
 
-Civara is a full-stack society management platform built with:
+Civara is a MERN-stack society management platform built with:
 
 - React frontend
 - Node.js / Express backend
@@ -58,12 +58,21 @@ This maps n8n to port `5678` and stores its data in `n8n_data/`.
 
 ## Automation And Calling
 
-- Complaint and emergency flows can trigger n8n webhooks.
+- Complaint  flows can trigger n8n webhooks.
 - n8n can call external services such as Twilio for voice calls or message workflows.
 - The backend reads webhook and automation secrets from environment variables.
 
-## Notes
 
-- The repository intentionally excludes generated dependencies and local runtime databases from Git.
-- If you add environment files, keep secrets out of version control.
-- The frontend and backend each have their own package configuration and scripts.
+## System Workflow
+- Resident registers a complaint.
+- Complaint data is stored in MongoDB Atlas.
+- n8n workflow triggers automation.
+- Twilio initiates automated calls/notifications.
+- Gemini & AssemblyAI process voice/transcription data.
+- Admin manages and updates complaint status.
+- Resident tracks complaint progress in real time.
+
+## ptoject overview
+CIVARA is a smart residential complaint management and tracking system designed to simplify communication between residents, security staff, and apartment management. The platform enables residents to register complaints, track complaint status  and receive automated updates through calls and notifications.
+
+The project integrates modern web technologies with automation tools and AI-powered services to improve complaint handling efficiency in residential communities.

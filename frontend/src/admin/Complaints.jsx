@@ -48,6 +48,15 @@ const formatCallStatus = (value) => {
     .join(" ");
 };
 
+const formatStatusLabel = (value) => {
+  const normalized = String(value || "OPEN").trim();
+  return normalized
+    .toLowerCase()
+    .split("_")
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+};
+
 export default function Complaints() {
   const navigate = useNavigate();
   const [complaints, setComplaints] = useState([]);
@@ -610,7 +619,7 @@ export default function Complaints() {
                   </td>
                   <td>
                     <span className={`badge status ${String(c.status || "open").toLowerCase()}`}>
-                      {c.status || "OPEN"}
+                      {formatStatusLabel(c.status)}
                     </span>
                   </td>
                   <td>

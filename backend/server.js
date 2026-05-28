@@ -15,6 +15,7 @@ import announcementRoutes from "./src/routes/announcement.routes.js";
 import emergencyRoutes from "./src/routes/emergency.routes.js";  
 import visitorRoutes from "./src/routes/visitor.routes.js"; 
 import securityRoutes from "./src/routes/security.routes.js";
+import publicRoutes from "./src/routes/public.routes.js";
 
 connectDB();
 startSLAMonitor();
@@ -29,6 +30,7 @@ app.use("/api/announcements",announcementRoutes);
 app.use("/api/emergencies",emergencyRoutes);
 app.use("/api/visitors", visitorRoutes);
 app.use("/api/security", securityRoutes);
+app.use("/api/public", publicRoutes);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server running on ${process.env.PORT}`);

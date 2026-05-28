@@ -1,19 +1,23 @@
 import nodemailer from "nodemailer";
 
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST || "smtp.mailtrap.io",
-  port: Number(process.env.SMTP_PORT) || 2525,
-  secure: false,
-  auth: {
-    user: process.env.SMTP_USER || "",
-    pass: process.env.SMTP_PASS || ""
-  }
-});
+const createTransporter = () =>
+  nodemailer.createTransport({
+    host: process.env.SMTP_HOST || "smtp.mailtrap.io",
+    port: Number(process.env.SMTP_PORT) || 2525,
+    secure: Number(process.env.SMTP_PORT) === 465,
+    auth: {
+      user: String(process.env.SMTP_USER || "").trim(),
+      pass: String(process.env.SMTP_PASS || "").replace(/\s+/g, "")
+    }
+  });
 
-export const sendMail = async ({ to, subject, text, html }) => {
+export const sendMail = async ({ to, subject, text, html, replyTo }) => {
   if (!to) throw new Error("Email recipient is required");
 
-  if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
+  const smtpUser = String(process.env.SMTP_USER || "").trim();
+  const smtpPass = String(process.env.SMTP_PASS || "").replace(/\s+/g, "");
+
+  if (!smtpUser || !smtpPass) {
     return {
       skipped: true,
       reason: "SMTP credentials are not configured"
@@ -25,9 +29,11 @@ export const sendMail = async ({ to, subject, text, html }) => {
     to,
     subject,
     text,
-    html
+    html,
+    replyTo: replyTo || undefined
   };
 
+  const transporter = createTransporter();
   const info = await transporter.sendMail(mailOptions);
   return info;
 };

@@ -1,6 +1,8 @@
 import express from "express";
 import {
     createVisitor,
+    createWalkInVisitorRequest,
+    respondToVisitorRequest,
     updateVisitorStatus,
     getMyVisitors,
     getAllVisitors
@@ -15,6 +17,13 @@ router.post(
     protect,
     allowRoles("resident"),
     createVisitor
+);
+
+router.post(
+    "/walk-in-request",
+    protect,
+    allowRoles("security", "admin"),
+    createWalkInVisitorRequest
 );
     
 
@@ -42,6 +51,13 @@ router.patch(
     protect,
     allowRoles("security", "admin"),
     updateVisitorStatus
+);
+
+router.patch(
+    "/:id/respond",
+    protect,
+    allowRoles("resident"),
+    respondToVisitorRequest
 );
 
 router.get(

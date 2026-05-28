@@ -23,11 +23,15 @@ const ResidentDashboard = () => {
  const { complaints, fetchComplaints } = useComplaints();  
   const today = new Date().toDateString();
 
-  const todaysVisitors = myVisitors.filter(
+const todaysVisitors = myVisitors.filter(
     v => 
       v.status === "CHECKED_IN" &&
       new Date(v.checkInTime).toDateString() === today
   );
+
+ const pendingVisitorApprovals = myVisitors.filter(
+   (visitor) => visitor.status === "PENDING_APPROVAL"
+ );
 
 
   const fetchMyVisitors = useCallback(async () => {
@@ -341,6 +345,11 @@ if(!resident) {
           <strong>{todaysVisitors.length}</strong>
         </div>
 
+        <div className="kpi-card warning">
+          <div className="kpi-label">Pending Visitor Approvals</div>
+          <strong>{pendingVisitorApprovals.length}</strong>
+        </div>
+
      </div>
      <br />
     <h2>My Visitors</h2>
@@ -351,12 +360,18 @@ if(!resident) {
       <p className="muted-text">No visitors yet.</p>
     ) : (
       <div className="visitor-list">
-        {myVisitors.slice(0,2).map((visitor) => (
+        {myVisitors.slice(0,3).map((visitor) => (
           <div key={visitor._id} className="visitor-row">
             <h4>{visitor.visitorName}</h4>
             <p>
               Visit Date: {new Date(visitor.visitDate).toLocaleDateString()}
             </p>
+
+            {visitor.source === "SECURITY_REQUEST" && (
+              <p className="muted-text">
+                Security approval request . {visitor.visitType}
+              </p>
+            )}
 
             <p className = {`visitorStatus ${visitor.status.toLowerCase()}`}>
               {visitor.status}</p>

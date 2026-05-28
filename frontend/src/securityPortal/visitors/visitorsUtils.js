@@ -3,6 +3,10 @@ export const getStatusBadgeClass = (status) => {
   switch (status) {
     case "EXPECTED":
       return "status-expected";
+    case "APPROVED":
+      return "status-expected";
+    case "PENDING_APPROVAL":
+      return "status-expected";
     case "CHECKED_IN":
       return "status-checked-in";
     case "DENIED":
