@@ -1,0 +1,131 @@
+.resident-layout {
+  --rp-bg: #f3f5f9;
+  --rp-surface: #ffffff;
+  --rp-surface-soft: #f8fafc;
+  --rp-border: #e2e8f0;
+  --rp-text: #0f172a;
+  --rp-text-muted: #64748b;
+  --rp-sidebar: #0f3a8f;
+  --rp-sidebar-text: #e2e8ff;
+  --rp-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+  background: var(--rp-bg);
+}
+
+.resident-layout.theme-dark {
+  --rp-bg: #0a1020;
+  --rp-surface: #111a2b;
+  --rp-surface-soft: #0f172a;
+  --rp-border: #243247;
+  --rp-text: #e5e7eb;
+  --rp-text-muted: #94a3b8;
+  --rp-sidebar: #070f1f;
+  --rp-sidebar-text: #c7d2fe;
+  --rp-shadow: 0 12px 30px rgba(2, 6, 23, 0.45);
+}
+
+.resident-layout .admin-sidebar {
+  background: var(--rp-sidebar);
+  color: var(--rp-sidebar-text);
+}
+
+.resident-layout .admin-logo {
+  color: #ffffff;
+}
+
+.resident-layout .admin-content {
+  background: var(--rp-bg);
+  color: var(--rp-text);
+}
+
+.resident-layout .page-title,
+.resident-layout h1,
+.resident-layout h2,
+.resident-layout h3,
+.resident-layout h4,
+.resident-layout strong {
+  color: var(--rp-text);
+}
+
+.resident-layout p,
+.resident-layout .muted-text,
+.resident-layout .settings-help,
+.resident-layout .settings-label {
+  color: var(--rp-text-muted);
+}
+
+.resident-layout .card,
+.resident-layout .profile-card,
+.resident-layout .kpi-card,
+.resident-layout .visitor-row,
+.resident-layout .modal-card {
+  background: var(--rp-surface);
+  color: var(--rp-text);
+  border: 1px solid var(--rp-border);
+  box-shadow: var(--rp-shadow);
+}
+
+.resident-layout .data-table th,
+.resident-layout .history-table th {
+  background: var(--rp-surface-soft);
+  color: var(--rp-text);
+}
+
+.resident-layout .data-table td,
+.resident-layout .history-table td,
+.resident-layout .document-row,
+.resident-layout .neighbour-row,
+.resident-layout .settings-row {
+  border-color: var(--rp-border);
+}
+
+.resident-layout input,
+.resident-layout select,
+.resident-layout textarea,
+.resident-layout .search-input,
+.resident-layout .modal-card input,
+.resident-layout .modal-card select,
+.resident-layout .modal-card textarea {
+  background: var(--rp-surface-soft);
+  color: var(--rp-text);
+  border: 1px solid var(--rp-border);
+}
+
+.resident-layout input::placeholder,
+.resident-layout textarea::placeholder {
+  color: var(--rp-text-muted);
+}
+
+.resident-layout .primary-btn {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.resident-layout .secondary-btn {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.resident-layout.theme-dark .secondary-btn {
+  background: #243247;
+  color: var(--rp-text);
+  border: 1px solid var(--rp-border);
+}
+
+.resident-layout .active-link {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.resident-layout .admin-link {
+  color: var(--rp-sidebar-text);
+}
+
+.resident-layout .admin-footer button {
+  background: #ffffff;
+  color: #0f172a;
+}
+
+.resident-layout.theme-dark .admin-footer button {
+  background: #1e293b;
+  color: #e5e7eb;
+  border: 1px solid #334155;
+}

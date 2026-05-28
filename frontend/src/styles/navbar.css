@@ -1,0 +1,62 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 48px;
+  background: #2563eb;
+  color: #ffffff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+/* Brand */
+.navbar-left {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-name {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.brand-tagline {
+  font-size: 1rem;
+  opacity: 0.85;
+}
+
+/* Right Links */
+.navbar-right {
+  display: flex;
+  gap: 18px;
+}
+
+.navbar-right button {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: all 0.25s ease;
+}
+
+.navbar-right button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Login Button */
+.primary-btn {
+  background: #ffffff !important;
+  color: #2563eb !important;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.primary-btn:hover {
+  background: #e0e7ff !important;
+}
+

@@ -1,0 +1,215 @@
+/* =========================
+   LOGIN PAGE (GLASS EFFECT)
+========================= */
+
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+
+  /* Background image + overlay */
+  background-image:
+    linear-gradient(
+      rgba(37, 99, 235, 0.45),
+      rgba(30, 64, 175, 0.55)
+    ),
+    url("/login.jpeg"); /* keep image in public folder */
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* =========================
+   LOGIN CARD (GLASS)
+========================= */
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 40px;
+
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+.login-card h2 {
+  font-size: 2rem;
+  color: #0f172a;
+}
+
+.login-subtitle {
+  margin-bottom: 25px;
+  font-size: 0.95rem;
+  color: #1e293b;
+}
+
+/* =========================
+   LOGIN TABS
+========================= */
+
+.login-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.login-tabs button {
+  flex: 1;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  background: rgba(241, 245, 249, 0.85);
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.login-tabs button:hover {
+  background: #e0e7ff;
+}
+
+.login-tabs .active {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+/* =========================
+   FORM
+========================= */
+
+.form-group {
+  text-align: left;
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.95rem;
+  margin-bottom: 6px;
+  color: #0b0e1a;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 14px 14px;
+  border-radius: 12px;
+  border: 2px solid #f1f1f4;
+  font-size: 0.95rem;
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+}
+
+/* =========================
+   PASSWORD FIELD
+========================= */
+
+.password-group {
+  position: relative;
+}
+
+.password-group input {
+  padding-right: 52px; /* space for icon */
+}
+
+/* Perfect vertical alignment */
+.toggle-password {
+  position: absolute;
+  right: 16px;
+  top: 68%;
+  transform: translateY(-50%);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  color: #64748b;
+}
+
+.toggle-password svg {
+  width: 20px;
+  height: 20px;
+}
+
+.toggle-password:hover {
+  color: #2563eb;
+}
+
+/* =========================
+   LOGIN BUTTON
+========================= */
+
+.login-btn {
+  width: 100%;
+  padding: 15px;
+  margin-top: 10px;
+
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  color: #ffffff;
+  border: none;
+  border-radius: 14px;
+
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  box-shadow: 0 14px 35px rgba(37, 99, 235, 0.35);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.login-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 45px rgba(37, 99, 235, 0.45);
+}
+
+/* =========================
+   NOTES & LINKS
+========================= */
+
+.login-note {
+  margin-top: 15px;
+  font-size: 0.8rem;
+  color: #0c1118;
+}
+
+.back-home {
+  display: block;
+  margin-top: 20px;
+  font-size: 0.9rem;
+  color: #0a0a0c;
+  text-decoration: none;
+}
+
+.back-home:hover {
+  text-decoration: underline;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 480px) {
+  .login-card {
+    padding: 30px 22px;
+    border-radius: 18px;
+  }
+
+  .login-tabs button {
+    font-size: 0.8rem;
+  }
+}

@@ -1,0 +1,250 @@
+.admin-layout.admin-portal {
+  --ap-bg: #f3f6fb;
+  --ap-surface: #ffffff;
+  --ap-surface-soft: #f8fafc;
+  --ap-border: #dbe4f0;
+  --ap-text: #0f172a;
+  --ap-text-muted: #64748b;
+  --ap-sidebar: #1e40af;
+  --ap-sidebar-text: #dbeafe;
+  --ap-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+  background: var(--ap-bg);
+}
+
+.admin-layout.admin-portal.theme-dark {
+  --ap-bg: #0a1020;
+  --ap-surface: #111a2b;
+  --ap-surface-soft: #0f172a;
+  --ap-border: #243247;
+  --ap-text: #e5e7eb;
+  --ap-text-muted: #94a3b8;
+  --ap-sidebar: #070f1f;
+  --ap-sidebar-text: #c7d2fe;
+  --ap-shadow: 0 16px 30px rgba(2, 6, 23, 0.5);
+}
+
+.admin-layout.admin-portal .admin-sidebar {
+  background: var(--ap-sidebar);
+  color: var(--ap-sidebar-text);
+}
+
+.admin-layout.admin-portal .admin-link {
+  color: var(--ap-sidebar-text);
+}
+
+.admin-layout.admin-portal .admin-logo {
+  color: #ffffff;
+}
+
+.admin-layout.admin-portal .active-link {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.admin-layout.admin-portal .admin-content {
+  background: var(--ap-bg);
+  color: var(--ap-text);
+}
+
+.admin-layout.admin-portal .page-title,
+.admin-layout.admin-portal h1,
+.admin-layout.admin-portal h2,
+.admin-layout.admin-portal h3,
+.admin-layout.admin-portal h4,
+.admin-layout.admin-portal strong,
+.admin-layout.admin-portal .guard-name {
+  color: var(--ap-text);
+}
+
+.admin-layout.admin-portal .muted-text,
+.admin-layout.admin-portal .settings-help,
+.admin-layout.admin-portal .settings-label {
+  color: var(--ap-text-muted);
+}
+
+.admin-layout.admin-portal .card,
+.admin-layout.admin-portal .kpi-card,
+.admin-layout.admin-portal .analytics-card,
+.admin-layout.admin-portal .shift-card,
+.admin-layout.admin-portal .modal-card,
+.admin-layout.admin-portal .attendance-card,
+.admin-layout.admin-portal .complaint-card,
+.admin-layout.admin-portal .announcement-card,
+.admin-layout.admin-portal .data-table,
+.admin-layout.admin-portal .stat-card,
+.admin-layout.admin-portal .dashboard-section {
+  background: var(--ap-surface);
+  color: var(--ap-text);
+  border: 1px solid var(--ap-border);
+  box-shadow: var(--ap-shadow);
+}
+
+.admin-layout.admin-portal .data-table th,
+.admin-layout.admin-portal .history-table th {
+  background: var(--ap-surface-soft);
+  color: var(--ap-text);
+  border-color: var(--ap-border);
+}
+
+.admin-layout.admin-portal .data-table td,
+.admin-layout.admin-portal .history-table td,
+.admin-layout.admin-portal .document-row,
+.admin-layout.admin-portal .neighbour-row,
+.admin-layout.admin-portal .settings-row {
+  border-color: var(--ap-border);
+}
+
+.admin-layout.admin-portal .mini-table,
+.admin-layout.admin-portal .complaints-table {
+  background: var(--ap-surface);
+  color: var(--ap-text);
+}
+
+.admin-layout.admin-portal .mini-table th,
+.admin-layout.admin-portal .complaints-table th {
+  background: var(--ap-surface-soft);
+  color: var(--ap-text);
+  border-color: var(--ap-border);
+}
+
+.admin-layout.admin-portal .mini-table td,
+.admin-layout.admin-portal .complaints-table td,
+.admin-layout.admin-portal .mini-table tr,
+.admin-layout.admin-portal .complaints-table tr,
+.admin-layout.admin-portal .table-responsive,
+.admin-layout.admin-portal .section-card {
+  border-color: var(--ap-border);
+}
+
+.admin-layout.admin-portal .payment-stats,
+.admin-layout.admin-portal .insights-list li,
+.admin-layout.admin-portal .chart-empty,
+.admin-layout.admin-portal .admin-info {
+  color: var(--ap-text-muted);
+}
+
+.admin-layout.admin-portal .recharts-wrapper,
+.admin-layout.admin-portal .recharts-surface,
+.admin-layout.admin-portal .recharts-responsive-container {
+  background: transparent !important;
+}
+
+.admin-layout.admin-portal .recharts-cartesian-grid line,
+.admin-layout.admin-portal .recharts-cartesian-axis-line,
+.admin-layout.admin-portal .recharts-cartesian-axis-tick-line,
+.admin-layout.admin-portal .recharts-reference-line line,
+.admin-layout.admin-portal .recharts-polar-grid line,
+.admin-layout.admin-portal .recharts-polar-grid circle {
+  stroke: var(--ap-border) !important;
+}
+
+.admin-layout.admin-portal .recharts-text {
+  fill: var(--ap-text-muted) !important;
+}
+
+.admin-layout.admin-portal .recharts-legend-item-text {
+  color: var(--ap-text-muted) !important;
+  fill: var(--ap-text-muted) !important;
+}
+
+.admin-layout.admin-portal .recharts-default-tooltip {
+  background: var(--ap-surface) !important;
+  border: 1px solid var(--ap-border) !important;
+  box-shadow: var(--ap-shadow) !important;
+}
+
+.admin-layout.admin-portal .recharts-tooltip-item,
+.admin-layout.admin-portal .recharts-tooltip-label {
+  color: var(--ap-text) !important;
+}
+
+.admin-layout.admin-portal input,
+.admin-layout.admin-portal select,
+.admin-layout.admin-portal textarea,
+.admin-layout.admin-portal .search-input,
+.admin-layout.admin-portal .modal-card input,
+.admin-layout.admin-portal .modal-card select,
+.admin-layout.admin-portal .modal-card textarea {
+  background: var(--ap-surface-soft);
+  color: var(--ap-text);
+  border: 1px solid var(--ap-border);
+}
+
+.admin-layout.admin-portal input::placeholder,
+.admin-layout.admin-portal textarea::placeholder {
+  color: var(--ap-text-muted);
+}
+
+.admin-layout.admin-portal .primary-btn {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.admin-layout.admin-portal .secondary-btn {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.admin-layout.admin-portal.theme-dark .secondary-btn {
+  background: #243247;
+  color: var(--ap-text);
+  border: 1px solid var(--ap-border);
+}
+
+.admin-layout.admin-portal .settings-section {
+  display: grid;
+  gap: 14px;
+}
+
+.admin-layout.admin-portal .settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  border: 1px solid var(--ap-border);
+  border-radius: 12px;
+  padding: 14px;
+  background: var(--ap-surface-soft);
+}
+
+.admin-layout.admin-portal .settings-label {
+  font-weight: 700;
+  margin: 0;
+  color: var(--ap-text);
+}
+
+.admin-layout.admin-portal .settings-help {
+  margin: 4px 0 0;
+  font-size: 13px;
+}
+
+.admin-layout.admin-portal .settings-action-btn {
+  min-width: 220px;
+  white-space: nowrap;
+}
+
+.admin-layout.admin-portal .modal-card h3 {
+  color: var(--ap-text);
+}
+
+.admin-layout.admin-portal .admin-footer button {
+  background: #ffffff;
+  color: #0f172a;
+}
+
+.admin-layout.admin-portal.theme-dark .admin-footer button {
+  background: #1e293b;
+  color: var(--ap-text);
+  border: 1px solid #334155;
+}
+
+@media (max-width: 640px) {
+  .admin-layout.admin-portal .settings-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .admin-layout.admin-portal .settings-action-btn {
+    min-width: 0;
+    width: 100%;
+  }
+}

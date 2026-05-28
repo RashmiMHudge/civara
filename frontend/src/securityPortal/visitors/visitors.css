@@ -1,0 +1,123 @@
+/* LIST */
+.visitor-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* CARD */
+.visitor-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 24px;
+  padding: 20px 24px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+}
+
+/* LEFT INFO */
+.visitor-info h4 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.visitor-info p {
+  margin: 4px 0;
+  color: #64748b;
+  font-size: 14px;
+}
+
+/* STATUS */
+.status-pill {
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  margin-top: 12px;
+}
+
+.status-expected {
+  background: #e0ecff;
+  color: #2563eb;
+}
+
+.status-checked-in {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.status-denied {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.status-expired {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+.status-checked-out {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+/* ACTIONS */
+.visitor-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.visitor-actions button {
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  min-width: 110px;
+}
+
+.btn-allow {
+  background: #e0ecff;
+  color: #2563eb;
+}
+
+.btn-deny {
+  background: #ef4444;
+  color: white;
+}
+
+/* MODAL */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal {
+  background: white;
+  padding: 24px;
+  border-radius: 16px;
+  width: 420px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.modal-actions button {
+  flex: 1;
+  padding: 12px;
+  border-radius: 10px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+}
