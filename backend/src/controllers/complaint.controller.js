@@ -624,7 +624,7 @@ export const getComplaintById = async (req, res) => {
 ===================================================== */
 export const assignComplaint = async (req, res) => {
   try {
-    const { staffId, role } = req.body;
+    const { staffId, role, name } = req.body;
 
     const complaint = await Complaint.findById(req.params.id);
 
@@ -635,6 +635,7 @@ export const assignComplaint = async (req, res) => {
     complaint.assignment = {
       assigned: true,
       assignedTo: staffId,
+      name: String(name || "").trim(),
       role,
       assignedAt: new Date()
     };
@@ -644,7 +645,7 @@ export const assignComplaint = async (req, res) => {
     complaint.timeline.push({
       event: "COMPLAINT_ASSIGNED",
       actor: "ADMIN",
-      meta: { staffId, role }
+      meta: { staffId, role, name: String(name || "").trim() }
     });
 
     await complaint.save();

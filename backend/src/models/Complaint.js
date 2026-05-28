@@ -70,6 +70,7 @@ const complaintSchema = new mongoose.Schema(
     assignment: {
       assigned: { type: Boolean, default: false },
       assignedTo: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+      name: String,
       role: String,
       assignedAt: Date
     },

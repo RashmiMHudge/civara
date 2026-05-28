@@ -50,15 +50,13 @@ export default function ComplaintDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [actionLoading, setActionLoading] = useState(false);
-  const [technicians, setTechnicians] = useState([]);
-
   // Modal states
   const [showAssignModal, setShowAssignModal] = useState(false);
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [showEscalateModal, setShowEscalateModal] = useState(false);
   const [showRescheduleModal, setShowRescheduleModal] = useState(false);
 
-  const [assignForm, setAssignForm] = useState({ technicianId: "", notes: "" });
+  const [assignForm, setAssignForm] = useState({ trade: "", assigneeName: "", notes: "" });
   const [statusForm, setStatusForm] = useState({ newStatus: "", notes: "" });
   const [escalateForm, setEscalateForm] = useState({ priority: "HIGH", reason: "" });
   const [rescheduleForm, setRescheduleForm] = useState({ preferredSlot: "", notes: "" });
@@ -93,6 +91,24 @@ export default function ComplaintDetail() {
     return flat || block || "-";
   };
 
+  const getTradeOptions = (category) => {
+    const normalized = String(category || "").trim().toLowerCase();
+
+    const tradeMap = {
+      plumbing: ["PLUMBER", "MAINTENANCE STAFF"],
+      electrical: ["ELECTRICIAN", "MAINTENANCE STAFF"],
+      carpenter: ["CARPENTER", "MAINTENANCE STAFF"],
+      carpentry: ["CARPENTER", "MAINTENANCE STAFF"],
+      civil: ["CIVIL TECHNICIAN", "MAINTENANCE STAFF"],
+      painting: ["PAINTER", "MAINTENANCE STAFF"],
+      hvac: ["HVAC TECHNICIAN", "MAINTENANCE STAFF"],
+      appliance: ["APPLIANCE TECHNICIAN", "MAINTENANCE STAFF"],
+      cleaning: ["HOUSEKEEPING", "MAINTENANCE STAFF"]
+    };
+
+    return tradeMap[normalized] || ["MAINTENANCE STAFF", "PLUMBER", "ELECTRICIAN", "CARPENTER"];
+  };
+
   // Fetch complaint
   useEffect(() => {
     const fetchComplaint = async () => {
@@ -107,6 +123,11 @@ export default function ComplaintDetail() {
         if (!res.ok) throw new Error(data.message || "Complaint not found");
         setComplaint(data);
         setStatusForm({ newStatus: data.status, notes: "" });
+        setAssignForm({
+          trade: data.assignment?.role || getTradeOptions(data.category)[0],
+          assigneeName: data.assignment?.name || "",
+          notes: ""
+        });
       } catch (err) {
         setError(err.message);
       } finally {
@@ -116,36 +137,11 @@ export default function ComplaintDetail() {
 
     fetchComplaint();
   }, [id]);
-
-  useEffect(() => {
-    const fetchTechnicians = async () => {
-      try {
-        const res = await fetch(`${API_BASE}/api/admin/security-staff`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`
-          }
-        });
-
-        const data = await res.json();
-        if (!res.ok) return;
-
-        const techUsers = (Array.isArray(data) ? data : []).filter(
-          (u) => u?.isActive !== false
-        );
-        setTechnicians(techUsers);
-      } catch (err) {
-        setTechnicians([]);
-      }
-    };
-
-    fetchTechnicians();
-  }, []);
-
   // ========== ACTION HANDLERS ==========
   const handleAssignTechnician = async (e) => {
     e.preventDefault();
-    if (!assignForm.technicianId) {
-      alert("Please select a technician");
+    if (!assignForm.trade) {
+      alert("Please select a trade");
       return;
     }
 
@@ -158,8 +154,9 @@ export default function ComplaintDetail() {
           Authorization: `Bearer ${localStorage.getItem("token")}`
         },
         body: JSON.stringify({
-          staffId: assignForm.technicianId,
-          role: "SECURITY",
+          staffId: null,
+          role: assignForm.trade,
+          name: assignForm.assigneeName,
           notes: assignForm.notes
         })
       });
@@ -172,8 +169,12 @@ export default function ComplaintDetail() {
       const updatedComplaint = await res.json();
       setComplaint(updatedComplaint);
       setShowAssignModal(false);
-      setAssignForm({ technicianId: "", notes: "" });
-      alert("Technician assigned successfully");
+      setAssignForm({
+        trade: updatedComplaint.assignment?.role || getTradeOptions(updatedComplaint.category)[0],
+        assigneeName: updatedComplaint.assignment?.name || "",
+        notes: ""
+      });
+      alert("Staff assigned successfully");
     } catch (err) {
       alert(`Error: ${err.message}`);
     } finally {
@@ -571,21 +572,32 @@ export default function ComplaintDetail() {
         <Modal title="Assign Staff" onClose={() => setShowAssignModal(false)}>
           <form onSubmit={handleAssignTechnician}>
             <label>
-              Staff Member
+              Trade
               <select
-                value={assignForm.technicianId}
+                value={assignForm.trade}
                 onChange={(e) =>
-                  setAssignForm({ ...assignForm, technicianId: e.target.value })
+                  setAssignForm({ ...assignForm, trade: e.target.value })
                 }
                 required
               >
-                <option value="">Select a staff member</option>
-                {technicians.map((tech) => (
-                  <option key={tech._id} value={tech._id}>
-                    {tech.name}{tech.guardId ? ` (${tech.guardId})` : ""}
+                <option value="">Select a trade</option>
+                {getTradeOptions(complaint.category).map((trade) => (
+                  <option key={trade} value={trade}>
+                    {trade}
                   </option>
                 ))}
               </select>
+            </label>
+            <label>
+              Person / Vendor Name
+              <input
+                type="text"
+                value={assignForm.assigneeName}
+                onChange={(e) =>
+                  setAssignForm({ ...assignForm, assigneeName: e.target.value })
+                }
+                placeholder="Ramesh Plumbing Services"
+              />
             </label>
             <label>
               Notes
