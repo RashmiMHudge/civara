@@ -40,16 +40,16 @@ const getAdminSocietyDetails = async (req) => {
   const admin = await User.findById(req.user.id).select("role societyName societyAddress societyContact");
   if (!admin || admin.role !== "admin") {
     return {
-      name: "",
-      address: "",
-      contact: "",
+      societyName: "",
+      societyAddress: "",
+      societyContact: "",
     };
   }
 
   return {
-    name: admin.societyName || "",
-    address: admin.societyAddress || "",
-    contact: admin.societyContact || "",
+    societyName: admin.societyName || "",
+    societyAddress: admin.societyAddress || "",
+    societyContact: admin.societyContact || "",
   };
 };
 

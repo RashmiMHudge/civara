@@ -7,6 +7,7 @@ import { Toaster } from "react-hot-toast";
 /* Public Pages */
 import Home from "./pages/Home";
 import Login from "./pages/login";
+import PlatformOnboarding from "./pages/PlatformOnboarding";
 import Navbar from "./components/Navbar";
 
 import ProtectedRoute from "./auth/ProtectedRoute";
@@ -63,6 +64,7 @@ function App() {
 
                   {/* Login WITHOUT Navbar */}
                   <Route path="/login" element={<Login />} />
+                  <Route path="/platform/onboarding" element={<PlatformOnboarding />} />
 
                   {/* ===================== */}
                   {/* ADMIN PORTAL */}

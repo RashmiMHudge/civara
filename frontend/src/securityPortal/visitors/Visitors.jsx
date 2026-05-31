@@ -76,6 +76,54 @@ const Visitors = () => {
     }
   };
 
+  const getInviteWindow = (visitor) => {
+    if (
+      visitor.source !== "RESIDENT_INVITE" ||
+      !visitor.visitDate ||
+      !visitor.fromTime ||
+      !visitor.toTime
+    ) {
+      return null;
+    }
+
+    const visitDate = new Date(visitor.visitDate);
+    const [fromHour, fromMinute] = String(visitor.fromTime).split(":").map(Number);
+    const [toHour, toMinute] = String(visitor.toTime).split(":").map(Number);
+
+    if (
+      Number.isNaN(visitDate.getTime()) ||
+      [fromHour, fromMinute, toHour, toMinute].some((value) => Number.isNaN(value))
+    ) {
+      return null;
+    }
+
+    const start = new Date(visitDate);
+    start.setHours(fromHour, fromMinute, 0, 0);
+
+    const end = new Date(visitDate);
+    end.setHours(toHour, toMinute, 0, 0);
+
+    if (end <= start) {
+      end.setDate(end.getDate() + 1);
+    }
+
+    return { start, end };
+  };
+
+  const getVisitDayStart = (visitor) => {
+    if (!visitor?.visitDate) {
+      return null;
+    }
+
+    const visitDate = new Date(visitor.visitDate);
+    if (Number.isNaN(visitDate.getTime())) {
+      return null;
+    }
+
+    visitDate.setHours(0, 0, 0, 0);
+    return visitDate;
+  };
+
   const handleQRScan = (text) => {
     setScanOpen(false);
 
@@ -91,6 +139,24 @@ const Visitors = () => {
 
     if (!visitor) {
       alert("Invalid or expired QR code");
+      return;
+    }
+
+    const inviteWindow = getInviteWindow(visitor);
+    const now = new Date();
+
+    if (inviteWindow) {
+      const visitDayStart = getVisitDayStart(visitor);
+
+      if (visitDayStart && now < visitDayStart) {
+        alert("Visitor QR can be scanned only on the scheduled visit date");
+        return;
+      }
+    }
+
+    if (inviteWindow && now > inviteWindow.end) {
+      alert(`Visitor QR expired after ${visitor.toTime}`);
+      fetchVisitors();
       return;
     }
 

@@ -33,6 +33,14 @@ const todaysVisitors = myVisitors.filter(
    (visitor) => visitor.status === "PENDING_APPROVAL"
  );
 
+ const formatVisitorStatus = (status) =>
+   String(status || "")
+     .toLowerCase()
+     .split("_")
+     .filter(Boolean)
+     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+     .join(" ");
+
 
   const fetchMyVisitors = useCallback(async () => {
     try {
@@ -345,49 +353,82 @@ if(!resident) {
           <strong>{todaysVisitors.length}</strong>
         </div>
 
-        <div className="kpi-card warning">
-          <div className="kpi-label">Pending Visitor Approvals</div>
-          <strong>{pendingVisitorApprovals.length}</strong>
-        </div>
-
      </div>
      <br />
-    <h2>My Visitors</h2>
+    <div className="resident-section-header">
+      <div>
+        <h2>My Visitors</h2>
+        <p className="muted-text">
+          {pendingVisitorApprovals.length > 0
+            ? `${pendingVisitorApprovals.length} visitor approval${pendingVisitorApprovals.length > 1 ? "s" : ""} waiting for you`
+            : "Track invited guests, deliveries, and recent entries"}
+        </p>
+      </div>
+      <button className="secondary-btn" onClick={() => navigate("/resident/visitors")}>
+        View All
+      </button>
+    </div>
     
     <br />
 
     {myVisitors.length === 0 ? (
       <p className="muted-text">No visitors yet.</p>
     ) : (
-      <div className="visitor-list">
+      <div className="visitor-list resident-visitor-preview-list">
         {myVisitors.slice(0,3).map((visitor) => (
-          <div key={visitor._id} className="visitor-row">
-            <h4>{visitor.visitorName}</h4>
-            <p>
-              Visit Date: {new Date(visitor.visitDate).toLocaleDateString()}
-            </p>
+          <div
+            key={visitor._id}
+            className={`visitor-row visitor-card resident-visitor-preview-card ${
+              visitor.status === "PENDING_APPROVAL" ? "visitor-card-pending" : ""
+            }`}
+          >
+            <div className="visitor-card-header">
+              <div className="visitor-card-title">
+                <h4>{visitor.visitorName}</h4>
+                <div className="visitor-source-line">
+                  <span
+                    className={`visitor-source-badge ${
+                      visitor.source === "SECURITY_REQUEST" ? "" : "visitor-source-badge-planned"
+                    }`}
+                  >
+                    {visitor.source === "SECURITY_REQUEST" ? "Security Request" : "Planned Visit"}
+                  </span>
+                  <span>
+                    Visit Date: {new Date(visitor.visitDate).toLocaleDateString()}
+                  </span>
+                  {visitor.visitType && <span>{formatVisitorStatus(visitor.visitType)}</span>}
+                </div>
+              </div>
 
-            {visitor.source === "SECURITY_REQUEST" && (
-              <p className="muted-text">
-                Security approval request . {visitor.visitType}
-              </p>
-            )}
+              <span className={`visitorStatus ${visitor.status.toLowerCase()} resident-visitor-preview-status`}>
+                {formatVisitorStatus(visitor.status)}
+              </span>
+            </div>
 
-            <p className = {`visitorStatus ${visitor.status.toLowerCase()}`}>
-              {visitor.status}</p>
+            <div className="resident-visitor-preview-meta">
+              <p><strong>Invite Code:</strong> {visitor.inviteCode}</p>
+              {visitor.checkInTime && (
+                <p>
+                  <strong>Entered:</strong> {new Date(visitor.checkInTime).toLocaleTimeString()}
+                </p>
+              )}
+              {visitor.checkOutTime && (
+                <p>
+                  <strong>Exited:</strong> {new Date(visitor.checkOutTime).toLocaleTimeString()}
+                </p>
+              )}
+            </div>
 
-            <p>Invite Code: {visitor.inviteCode}</p>
-
-            {visitor.checkInTime && (
-              <p>
-                Entered at {new Date(visitor.checkInTime).toLocaleTimeString()}
-              </p>
-            )}
-
-            {visitor.checkOutTime && (
-              <p>
-                Exited at {new Date(visitor.checkOutTime).toLocaleTimeString()}
-              </p>
+            {visitor.status === "PENDING_APPROVAL" && (
+              <div className="visitor-pending-panel resident-visitor-preview-panel">
+                <div className="visitor-pending-copy">
+                  <strong>Approval needed</strong>
+                  <span>Open Visitors to allow or deny this person at the gate.</span>
+                </div>
+                <button className="primary-btn" onClick={() => navigate("/resident/visitors")}>
+                  Review Request
+                </button>
+              </div>
             )}
           </div>
         ))} 

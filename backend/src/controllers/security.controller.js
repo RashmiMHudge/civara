@@ -3,6 +3,18 @@ import path from "path";
 import User from "../models/User.js";
 import { generateNextGuardId } from "../utils/generateGuardId.js";
 
+const getSocietyProfileFallback = async (societyCode) => {
+  const admin = await User.findOne({ role: "admin", societyCode })
+    .select("societyName societyAddress societyContact")
+    .lean();
+
+  return {
+    societyName: admin?.societyName || "",
+    societyAddress: admin?.societyAddress || "",
+    societyContact: admin?.societyContact || "",
+  };
+};
+
 async function uploadSecurityAvatar(req, res) {
   try {
     const user = await User.findById(req.user.id);
@@ -42,6 +54,7 @@ async function getSecurityProfile(req, res) {
         ? user.avatar
         : `${req.protocol}://${req.get("host")}${user.avatar}`
       : null;
+    const societyFallback = await getSocietyProfileFallback(user.societyCode);
     res.json({
       _id: user._id,
       guardId: user.guardId || null,
@@ -50,9 +63,9 @@ async function getSecurityProfile(req, res) {
       email: user.email,
       phone: user.phone || null,
       role: user.role,
-      societyName: user.societyName || "",
-      societyAddress: user.societyAddress || "",
-      societyContact: user.societyContact || "",
+      societyName: user.societyName || societyFallback.societyName,
+      societyAddress: user.societyAddress || societyFallback.societyAddress,
+      societyContact: user.societyContact || societyFallback.societyContact,
       documents: Array.isArray(user.documents) ? user.documents : [],
       avatar: avatarUrl,
       punchedInAt: user.punchedInAt || null,

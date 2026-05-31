@@ -11,6 +11,10 @@ await User.create({
   societyCode: "CIV-001",
   email: "admin@civara.com",
   password: "admin@123",
+  name: "Civara Admin",
+  societyName: "Gokuldham Apartments",
+  societyAddress: "",
+  societyContact: "",
 });
 
 console.log("Admin created");

@@ -67,6 +67,13 @@ const VisitorsPage = () => {
     [search, visitors]
   );
 
+  const formatVisitorDate = (visitDate) =>
+    new Date(visitDate).toLocaleDateString(undefined, {
+      day: "numeric",
+      month: "short",
+      year: "numeric"
+    });
+
   const respondToVisitor = async (visitorId, decision) => {
     try {
       const res = await fetch(`${API_BASE}/api/visitors/${visitorId}/respond`, {
@@ -113,85 +120,70 @@ const VisitorsPage = () => {
           {filteredVisitors.map((visitor) => {
             const isPendingApproval = visitor.status === "PENDING_APPROVAL";
             const isResidentInvite = visitor.source !== "SECURITY_REQUEST";
+            const residentUnit = `${visitor.resident?.block ? `${visitor.resident.block}-` : ""}${visitor.resident?.flat || ""}`;
 
             return (
-              <div
-                key={visitor._id}
-                className="visitor-row"
-                style={{
-                  border: "1px solid #eee",
-                  borderRadius: 8,
-                  marginBottom: 12,
-                  padding: 12
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    gap: 12
-                  }}
-                >
-                  <div>
-                    <h4 style={{ margin: 0 }}>{visitor.visitorName}</h4>
-                    {visitor.source === "SECURITY_REQUEST" && (
-                      <p style={{ margin: "4px 0 0", fontSize: 13, color: "#666" }}>
-                        Security request . {formatStatus(visitor.visitType)}
-                      </p>
+              <div key={visitor._id} className={`visitor-row visitor-card ${isPendingApproval ? "visitor-card-pending" : ""}`}>
+                <div className="visitor-card-header">
+                  <div className="visitor-card-title">
+                    <h4>{visitor.visitorName}</h4>
+                    {visitor.source === "SECURITY_REQUEST" ? (
+                      <div className="visitor-source-line">
+                        <span className="visitor-source-badge">Security Request</span>
+                        <span>{formatStatus(visitor.visitType)}</span>
+                        <span>For Flat {residentUnit}</span>
+                      </div>
+                    ) : (
+                      <div className="visitor-source-line">
+                        <span className="visitor-source-badge visitor-source-badge-planned">Planned Visit</span>
+                        <span>For Flat {residentUnit}</span>
+                      </div>
                     )}
                   </div>
 
                   <span
-                    style={{
-                      background: statusColors[visitor.status] || "#aaa",
-                      color: "#fff",
-                      borderRadius: 12,
-                      padding: "2px 12px",
-                      fontSize: 13,
-                      fontWeight: 500
-                    }}
+                    className="visitor-status-badge"
+                    style={{ background: statusColors[visitor.status] || "#aaa" }}
                   >
                     {formatStatus(visitor.status)}
                   </span>
                 </div>
 
-                <p style={{ margin: "4px 0 0 0", fontSize: 14 }}>
-                  <strong>Date:</strong> {new Date(visitor.visitDate).toLocaleDateString()}{" "}
+                <div className="visitor-meta-grid">
+                  <p>
+                    <strong>Date:</strong> {formatVisitorDate(visitor.visitDate)}{" "}
                   {visitor.fromTime && visitor.toTime && (
                     <span>
                       <strong>Time:</strong> {visitor.fromTime} - {visitor.toTime}
                     </span>
                   )}
-                </p>
-
-                {visitor.purpose && (
-                  <p style={{ margin: "2px 0", fontSize: 13, color: "#666" }}>
-                    <strong>Purpose:</strong> {visitor.purpose}
                   </p>
-                )}
 
-                <p style={{ margin: "2px 0", fontSize: 13 }}>
-                  <strong>Phone:</strong>{" "}
-                  {visitor.phone || <span style={{ color: "#aaa" }}>Not set</span>}
-                </p>
+                  {visitor.purpose && (
+                    <p>
+                      <strong>Purpose:</strong> {visitor.purpose}
+                    </p>
+                  )}
 
-                {visitor.securityRequest?.notes && (
-                  <p style={{ margin: "2px 0", fontSize: 13 }}>
-                    <strong>Gate Note:</strong> {visitor.securityRequest.notes}
+                  <p>
+                    <strong>Phone:</strong>{" "}
+                    {visitor.phone || <span className="visitor-muted">Not set</span>}
                   </p>
-                )}
+
+                  {visitor.securityRequest?.notes && (
+                    <p className="visitor-gate-note">
+                      <strong>Gate Note:</strong> {visitor.securityRequest.notes}
+                    </p>
+                  )}
+                </div>
 
                 {isPendingApproval ? (
-                  <div
-                    style={{
-                      display: "flex",
-                      gap: 10,
-                      flexWrap: "wrap",
-                      alignItems: "center",
-                      marginTop: 10
-                    }}
-                  >
+                  <div className="visitor-pending-panel">
+                    <div className="visitor-pending-copy">
+                      <strong>Approval needed</strong>
+                      <span>Security is waiting for your decision before allowing entry.</span>
+                    </div>
+                    <div className="visitor-action-row">
                     <button
                       className="primary-btn"
                       onClick={() => respondToVisitor(visitor._id, "APPROVED")}
@@ -204,32 +196,17 @@ const VisitorsPage = () => {
                     >
                       Deny Entry
                     </button>
+                    </div>
                   </div>
                 ) : (
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 20,
-                      flexWrap: "wrap",
-                      margin: "8px 0"
-                    }}
-                  >
-                    <span style={{ fontSize: 13, minWidth: 120 }}>
+                  <div className="visitor-footer-row">
+                    <span className="visitor-invite-code">
                       <strong>Invite Code:</strong> {visitor.inviteCode}
                     </span>
                     {isResidentInvite && (
                       <>
                         <button
-                          style={{
-                            fontSize: 12,
-                            padding: "4px 14px",
-                            borderRadius: 6,
-                            border: "none",
-                            background: "#eee",
-                            cursor: "pointer",
-                            marginRight: 4
-                          }}
+                          className="visitor-inline-btn"
                           onClick={() => {
                             navigator.clipboard.writeText(visitor.inviteCode);
                           }}
@@ -238,16 +215,7 @@ const VisitorsPage = () => {
                         </button>
                         {["EXPECTED", "APPROVED"].includes(visitor.status) && (
                           <button
-                            style={{
-                              fontSize: 12,
-                              padding: "4px 14px",
-                              borderRadius: 6,
-                              border: "none",
-                              background: "#f44336",
-                              color: "#fff",
-                              cursor: "pointer",
-                              marginRight: 4
-                            }}
+                            className="visitor-inline-btn visitor-inline-btn-danger"
                             onClick={async () => {
                               if (!window.confirm("Cancel this invite?")) return;
                               try {
@@ -272,10 +240,10 @@ const VisitorsPage = () => {
                             Cancel
                           </button>
                         )}
-                        <span style={{ marginLeft: 8, display: "flex", alignItems: "center" }}>
+                        <span className="visitor-qr-wrap">
                           <QRCodeSVG
                             value={`${visitor._id}|${visitor.inviteCode}`}
-                            size={48}
+                            size={56}
                             level="M"
                             includeMargin={false}
                           />
@@ -286,15 +254,15 @@ const VisitorsPage = () => {
                 )}
 
                 {visitor.checkInTime && (
-                  <p style={{ margin: "2px 0", fontSize: 13 }}>
-                    <span style={{ color: "#0288d1" }}>
+                  <p className="visitor-timestamp visitor-timestamp-entry">
+                    <span>
                       Entered at {new Date(visitor.checkInTime).toLocaleTimeString()}
                     </span>
                   </p>
                 )}
                 {visitor.checkOutTime && (
-                  <p style={{ margin: "2px 0", fontSize: 13 }}>
-                    <span style={{ color: "#616161" }}>
+                  <p className="visitor-timestamp visitor-timestamp-exit">
+                    <span>
                       Exited at {new Date(visitor.checkOutTime).toLocaleTimeString()}
                     </span>
                   </p>

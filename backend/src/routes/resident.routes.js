@@ -5,6 +5,18 @@ import { allowRoles } from "../middleware/roleMiddleware.js";
 import upload from "../middleware/upload.js";
 const router = express.Router();
 
+const getSocietyProfileFallback = async (societyCode) => {
+  const admin = await User.findOne({ role: "admin", societyCode })
+    .select("societyName societyAddress societyContact")
+    .lean();
+
+  return {
+    societyName: admin?.societyName || "",
+    societyAddress: admin?.societyAddress || "",
+    societyContact: admin?.societyContact || "",
+  };
+};
+
 router.get("/me", protect, allowRoles("resident"), async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
@@ -13,7 +25,14 @@ router.get("/me", protect, allowRoles("resident"), async (req, res) => {
       return res.status(404).json({ message: "Resident not found" });
     }
 
-    res.json(user);
+    const societyFallback = await getSocietyProfileFallback(user.societyCode);
+
+    res.json({
+      ...user.toObject(),
+      societyName: user.societyName || societyFallback.societyName,
+      societyAddress: user.societyAddress || societyFallback.societyAddress,
+      societyContact: user.societyContact || societyFallback.societyContact,
+    });
   } catch (err) {
     res.status(500).json({ message: "Server error" });
   }

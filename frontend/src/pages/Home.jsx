@@ -296,6 +296,7 @@ const Home = () => {
             <a href="#why">Why Civara</a>
             <a href="#contact">Contact</a>
             <a href="/login">Login</a>
+            <a href="/platform/onboarding">Society Onboarding</a>
           </div>
 
           <div className="footer-copy">

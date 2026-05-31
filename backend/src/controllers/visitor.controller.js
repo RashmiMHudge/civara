@@ -4,6 +4,79 @@ import User from "../models/User.js";
 const generateInviteCode = () =>
   Math.floor(1000000 + Math.random() * 900000).toString();
 
+const getInviteWindow = (visitor) => {
+  if (
+    visitor.source !== "RESIDENT_INVITE" ||
+    !visitor.visitDate ||
+    !visitor.fromTime ||
+    !visitor.toTime
+  ) {
+    return null;
+  }
+
+  const visitDate = new Date(visitor.visitDate);
+  if (Number.isNaN(visitDate.getTime())) return null;
+
+  const [fromHour, fromMinute] = String(visitor.fromTime).split(":").map(Number);
+  const [toHour, toMinute] = String(visitor.toTime).split(":").map(Number);
+
+  if (
+    [fromHour, fromMinute, toHour, toMinute].some((value) => Number.isNaN(value))
+  ) {
+    return null;
+  }
+
+  const start = new Date(visitDate);
+  start.setHours(fromHour, fromMinute, 0, 0);
+
+  const end = new Date(visitDate);
+  end.setHours(toHour, toMinute, 0, 0);
+
+  if (end <= start) {
+    end.setDate(end.getDate() + 1);
+  }
+
+  return { start, end };
+};
+
+const getVisitDayStart = (visitor) => {
+  if (!visitor?.visitDate) return null;
+
+  const visitDate = new Date(visitor.visitDate);
+  if (Number.isNaN(visitDate.getTime())) return null;
+
+  visitDate.setHours(0, 0, 0, 0);
+  return visitDate;
+};
+
+const applyExpiryRules = async (visitor, now = new Date()) => {
+  if (!visitor) return visitor;
+
+  const normalizedStatus = String(visitor.status || "").toUpperCase();
+  if (!["EXPECTED", "APPROVED", "PENDING_APPROVAL"].includes(normalizedStatus)) {
+    return visitor;
+  }
+
+  const inviteWindow = getInviteWindow(visitor);
+  if (inviteWindow && now > inviteWindow.end) {
+    visitor.status = "EXPIRED";
+    await visitor.save();
+    return visitor;
+  }
+
+  const visitDate = new Date(visitor.visitDate);
+  visitDate.setHours(0, 0, 0, 0);
+  const today = new Date(now);
+  today.setHours(0, 0, 0, 0);
+
+  if (!inviteWindow && visitDate < today) {
+    visitor.status = "EXPIRED";
+    await visitor.save();
+  }
+
+  return visitor;
+};
+
 export const createVisitor = async (req, res) => {
   try {
     const { visitorName, phone, purpose, visitDate, fromTime, toTime } = req.body;
@@ -176,6 +249,7 @@ export const updateVisitorStatus = async (req, res) => {
     }
 
     const nextStatus = String(req.body.status || "").trim().toUpperCase();
+    await applyExpiryRules(visitor);
 
     if (
       nextStatus === "CHECKED_IN" &&
@@ -184,6 +258,29 @@ export const updateVisitorStatus = async (req, res) => {
       return res.status(400).json({
         message: "Visitor can only be checked in after approval"
       });
+    }
+
+    if (nextStatus === "CHECKED_IN") {
+      const inviteWindow = getInviteWindow(visitor);
+      const now = new Date();
+
+      if (inviteWindow) {
+        const visitDayStart = getVisitDayStart(visitor);
+
+        if (visitDayStart && now < visitDayStart) {
+          return res.status(400).json({
+            message: "QR can be scanned only on the scheduled visit date"
+          });
+        }
+
+        if (now > inviteWindow.end) {
+          visitor.status = "EXPIRED";
+          await visitor.save();
+          return res.status(400).json({
+            message: `QR expired after ${visitor.toTime}`
+          });
+        }
+      }
     }
 
     visitor.status = nextStatus;
@@ -208,21 +305,9 @@ export const getMyVisitors = async (req, res) => {
     const visitors = await Visitor.find({
       "resident.id": req.user.id
     }).sort({ createdAt: -1 });
-    
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
 
-    for (let visitor of visitors) {
-      const visitDate = new Date(visitor.visitDate);
-      visitDate.setHours(0, 0, 0, 0);
-
-      if (
-        ["EXPECTED", "PENDING_APPROVAL"].includes(visitor.status) &&
-        visitDate < today
-      ) {
-        visitor.status = "EXPIRED";
-        await visitor.save();
-      }
+    for (const visitor of visitors) {
+      await applyExpiryRules(visitor);
     }
     res.json(visitors);
   } catch (error) {
@@ -232,7 +317,10 @@ export const getMyVisitors = async (req, res) => {
 
 export const getAllVisitors = async (req, res) => {
   try {
-    const visitors = await Visitor.find().sort({ createdAt: -1 });  
+    const visitors = await Visitor.find().sort({ createdAt: -1 });
+    for (const visitor of visitors) {
+      await applyExpiryRules(visitor);
+    }
     res.json(visitors);
     } catch (error) {
     res.status(500).json({ message: "Server error" });
