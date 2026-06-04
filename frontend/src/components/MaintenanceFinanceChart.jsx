@@ -6,30 +6,31 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
-  CartesianGrid
+  CartesianGrid,
 } from "recharts";
 
-const data = [
-  { name: "Paid", amount: 42000 },
-  { name: "Pending", amount: 8500 },
-  { name: "Overdue", amount: 6200 }
-];
+const MaintenanceFinanceChart = ({ data = [] }) => {
+  const hasData = data.some((item) => Number(item.amount || 0) > 0);
 
-const MaintenanceFinanceChart = () => {
   return (
     <div className="dashboard-section">
-      <h2>Maintenance Collection Overview (₹)</h2>
+      <h2>Maintenance Collection Overview (Rs)</h2>
 
-      <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-
-          <Bar dataKey="amount" fill="#2563eb" radius={[8, 8, 0, 0]} />
-        </BarChart>
-      </ResponsiveContainer>
+      {!hasData ? (
+        <p className="chart-empty">
+          No maintenance collection data available yet for this society.
+        </p>
+      ) : (
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart data={data}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip formatter={(value) => `Rs ${value}`} />
+            <Bar dataKey="amount" fill="#2563eb" radius={[8, 8, 0, 0]} />
+          </BarChart>
+        </ResponsiveContainer>
+      )}
     </div>
   );
 };

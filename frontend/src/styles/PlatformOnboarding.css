@@ -5,7 +5,7 @@
 }
 
 .platform-hero {
-  padding: 72px 24px 36px;
+  padding: 56px 24px 20px;
 }
 
 .platform-hero__inner,
@@ -40,35 +40,6 @@
   color: #4a5f84;
   font-size: 1rem;
   line-height: 1.65;
-}
-
-.platform-overview {
-  margin-top: 28px;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-}
-
-.platform-overview__card {
-  padding: 16px 18px;
-  border: 1px solid #d9e5ff;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.76);
-  box-shadow: 0 12px 24px rgba(27, 70, 145, 0.05);
-}
-
-.platform-overview__card span {
-  display: block;
-  color: #607694;
-  font-size: 0.84rem;
-  margin-bottom: 8px;
-}
-
-.platform-overview__card strong {
-  display: block;
-  color: #10213d;
-  font-size: 1rem;
-  line-height: 1.4;
 }
 
 .platform-secret,
@@ -157,7 +128,7 @@
 }
 
 .platform-section {
-  padding: 18px 24px 36px;
+  padding: 12px 24px 36px;
 }
 
 .platform-section--light {
@@ -300,23 +271,14 @@
   color: #33496d;
 }
 
-.platform-society__item {
-  padding: 12px 14px;
-  border-radius: 8px;
-  background: #f7faff;
-  border: 1px solid #e2ebff;
+.platform-society__meta p {
+  margin: 0;
+  padding: 4px 0;
+  line-height: 1.55;
 }
 
-.platform-society__item span {
-  display: block;
-  color: #6a7f9f;
-  font-size: 0.8rem;
-  margin-bottom: 6px;
-}
-
-.platform-society__item strong {
+.platform-society__meta strong {
   color: #203554;
-  line-height: 1.45;
 }
 
 .platform-society__address {
@@ -325,14 +287,13 @@
 
 @media (max-width: 860px) {
   .platform-hero__inner,
-  .platform-overview,
   .platform-grid,
   .platform-society__meta {
     grid-template-columns: 1fr;
   }
 
   .platform-hero {
-    padding-top: 56px;
+    padding-top: 44px;
   }
 
   .platform-form {

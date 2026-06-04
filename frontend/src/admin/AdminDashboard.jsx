@@ -1,4 +1,3 @@
-
 import React from "react";
 import "../styles/AdminDashboard.css";
 import ComplaintCategoryPie from "../components/ComplaintsCategoryPie";
@@ -14,7 +13,7 @@ import {
   PieChart,
   Pie,
   Cell,
-  Legend
+  Legend,
 } from "recharts";
 import API_BASE from "../config/api";
 
@@ -67,6 +66,7 @@ const AdminDashboard = () => {
   const pendingResidents = residents.filter((r) => r.maintenanceStatus === "Pending");
   const overdueResidents = residents.filter((r) => r.maintenanceStatus === "Overdue");
   const paidResidents = residents.filter((r) => r.maintenanceStatus === "Paid");
+  const adminUser = users.find((u) => u.role === "admin");
 
   const totalComplaints = stats?.complaints?.total || 0;
   const resolvedComplaints = stats?.complaints?.resolved || 0;
@@ -84,6 +84,15 @@ const AdminDashboard = () => {
       month: "Current",
     })),
   };
+
+  const maintenanceCollectionData = [
+    { name: "Paid", amount: maintenancePayments.paid * 2500 },
+    { name: "Pending", amount: maintenancePayments.pending * 2500 },
+    { name: "Overdue", amount: maintenancePayments.overdue * 2500 },
+  ];
+
+  // Historical maintenance collection snapshots are not stored yet.
+  const maintenanceTrendData = [];
 
   const operationsSummary = [
     `Complaint resolution rate: ${resolutionRate}% (${resolvedComplaints}/${totalComplaints}).`,
@@ -108,19 +117,16 @@ const AdminDashboard = () => {
 
   return (
     <div className="dashboard-page">
-
-      {/* SOCIETY HEADER */}
       <div className="dashboard-header">
         <div>
           <h1>CIVARA Dashboard</h1>
           <p>Live society operations overview</p>
         </div>
         <div className="admin-info">
-          <p><strong>Admin:</strong> Society Admin</p>
+          <p><strong>Admin:</strong> {adminUser?.name || "Society Admin"}</p>
         </div>
       </div>
 
-      {/* KPI CARDS */}
       <div className="dashboard-cards">
         <div className="dash-card">
           <h4>Total Residents</h4>
@@ -143,7 +149,6 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* MAINTENANCE PAYMENTS */}
       <div className="dashboard-section">
         <h2>Maintenance Payment Status</h2>
 
@@ -167,32 +172,31 @@ const AdminDashboard = () => {
                 <td colSpan="3">No pending maintenance dues.</td>
               </tr>
             ) : (
-              maintenancePayments.pendingList.map((p, i) => (
-                <tr key={i}>
-                  <td>{p.flat}</td>
-                  <td>₹{p.amount}</td>
-                  <td>{p.month}</td>
+              maintenancePayments.pendingList.map((payment, index) => (
+                <tr key={index}>
+                  <td>{payment.flat}</td>
+                  <td>Rs {payment.amount}</td>
+                  <td>{payment.month}</td>
                 </tr>
               ))
             )}
           </tbody>
         </table>
       </div>
-        {/* COMPLAINTS TREND CHART */}
-        <ComplaintTrendChart />
+
+      <ComplaintTrendChart />
       <SLAStatsChart />
-      {/* CHARTS SECTION */}
+
       <div className="dashboard-section">
         <ComplaintCategoryPie />
       </div>
       <div className="dashboard-section">
-        <MaintenanceFinanceChart />
+        <MaintenanceFinanceChart data={maintenanceCollectionData} />
       </div>
       <div className="dashboard-section">
-        <MaintenanceTrendChart />
+        <MaintenanceTrendChart data={maintenanceTrendData} />
       </div>
-      
-      {/* OPERATIONS SUMMARY */}
+
       <div className="dashboard-section">
         <h2>Operations Summary</h2>
         <ul className="insights-list">
@@ -201,14 +205,10 @@ const AdminDashboard = () => {
           ))}
         </ul>
       </div>
-      
-     
     </div>
   );
 };
 
-
-// Chart for complaints trend (last 7 days)
 function ComplaintTrendChart() {
   const [data, setData] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
@@ -219,7 +219,7 @@ function ComplaintTrendChart() {
       try {
         setLoading(true);
         const res = await fetch(`${API_BASE}/api/complaints/trend`, {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         });
         const result = await res.json();
         if (!res.ok) throw new Error(result.message || "Failed to load");
@@ -262,7 +262,6 @@ function ComplaintTrendChart() {
   );
 }
 
-// Chart for SLA stats (breached vs on track)
 function SLAStatsChart() {
   const [data, setData] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
@@ -274,13 +273,13 @@ function SLAStatsChart() {
       try {
         setLoading(true);
         const res = await fetch(`${API_BASE}/api/complaints/sla-stats`, {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         });
         const result = await res.json();
         if (!res.ok) throw new Error(result.message || "Failed to load");
         setData([
           { name: "On Track", value: result.onTrack },
-          { name: "Breached", value: result.breached }
+          { name: "Breached", value: result.breached },
         ]);
         setError(null);
       } catch (err) {

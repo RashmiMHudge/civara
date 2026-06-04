@@ -1,5 +1,15 @@
 import mongoose from "mongoose";
 
+const complaintCategories = [
+  "Plumbing",
+  "Electrical",
+  "Carpentry",
+  "Pest Control",
+  "Security",
+  "Common Area",
+  "Other"
+];
+
 const timelineSchema = new mongoose.Schema({
   event: { type: String, required: true },
   actor: { type: String, required: true }, // RESIDENT / ADMIN / SYSTEM / SECURITY
@@ -35,6 +45,7 @@ const complaintSchema = new mongoose.Schema(
 
     category: {
       type: String,
+      enum: complaintCategories,
       required: true
     },
 
@@ -96,7 +107,6 @@ const complaintSchema = new mongoose.Schema(
       callAttempts: { type: Number, default: 0 },
       preferredCallTime: {
         type: String,
-        enum: ["ANYTIME", "MORNING", "AFTERNOON", "EVENING"],
         default: "ANYTIME"
       },
       repeatedIssue: { type: Boolean, default: false },

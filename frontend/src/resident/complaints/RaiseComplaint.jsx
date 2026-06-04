@@ -3,6 +3,16 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useComplaints } from "./ComplaintsContext";
 
+const COMPLAINT_CATEGORIES = [
+  "Plumbing",
+  "Electrical",
+  "Carpentry",
+  "Pest Control",
+  "Security",
+  "Common Area",
+  "Other"
+];
+
 const RaiseComplaint = () => {
   const navigate = useNavigate();
   const { createComplaint } = useComplaints();
@@ -168,10 +178,11 @@ const RaiseComplaint = () => {
           <label>Category</label>
           <select name="category" onChange={handleChange} value={form.category}>
             <option value="">Select</option>
-            <option>Plumbing</option>
-            <option>Electrical</option>
-            <option>Security</option>
-            <option>Other</option>
+            {COMPLAINT_CATEGORIES.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
           </select>
 
           {errors.category && (
@@ -222,10 +233,7 @@ const RaiseComplaint = () => {
             value={form.preferredCallTime}
             onChange={handleChange}
           >
-            <option>ANYTIME</option>
-            <option>MORNING</option>
-            <option>AFTERNOON</option>
-            <option>EVENING</option>
+            <option value="ANYTIME">Anytime</option>
           </select>
         </div>
 

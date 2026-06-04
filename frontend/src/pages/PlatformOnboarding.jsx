@@ -22,8 +22,6 @@ const PlatformOnboarding = () => {
   const [isLoadingSocieties, setIsLoadingSocieties] = useState(false);
 
   const hasSecret = useMemo(() => Boolean(platformSecret.trim()), [platformSecret]);
-  const societyCount = societies.length;
-
   const handleSecretChange = (event) => {
     const nextValue = event.target.value;
     setPlatformSecret(nextValue);
@@ -121,21 +119,6 @@ const PlatformOnboarding = () => {
               Create the next Civara tenant, generate a society code, and hand over the first
               admin account without touching seed scripts.
             </p>
-
-            <div className="platform-overview">
-              <div className="platform-overview__card">
-                <span>Societies onboarded</span>
-                <strong>{societyCount}</strong>
-              </div>
-              <div className="platform-overview__card">
-                <span>Setup model</span>
-                <strong>Single product, multi-society</strong>
-              </div>
-              <div className="platform-overview__card">
-                <span>Next society code</span>
-                <strong>Auto-generated unless you override it</strong>
-              </div>
-            </div>
           </div>
 
           <div className="platform-secret">
@@ -169,13 +152,8 @@ const PlatformOnboarding = () => {
               <h2>Create Society</h2>
               <p>
                 Create the first admin account and lock the new society into its own tenant space.
-                Use a custom society code only when you really need one.
+                
               </p>
-            </div>
-
-            <div className="platform-tip">
-              <strong>Recommended flow:</strong> create the society, send the admin their credentials,
-              then let that admin add residents and security staff inside their own portal.
             </div>
 
             <div className="platform-grid">
@@ -314,26 +292,11 @@ const PlatformOnboarding = () => {
                   </div>
 
                   <div className="platform-society__meta">
-                    <div className="platform-society__item">
-                      <span>Admin</span>
-                      <strong>{society.admin.name}</strong>
-                    </div>
-                    <div className="platform-society__item">
-                      <span>Email</span>
-                      <strong>{society.admin.email}</strong>
-                    </div>
-                    <div className="platform-society__item">
-                      <span>Admin Phone</span>
-                      <strong>{society.admin.phone || "Not provided"}</strong>
-                    </div>
-                    <div className="platform-society__item">
-                      <span>Society Contact</span>
-                      <strong>{society.societyContact || "Not provided"}</strong>
-                    </div>
-                    <div className="platform-society__item platform-society__address">
-                      <span>Address</span>
-                      <strong>{society.societyAddress || "Not provided"}</strong>
-                    </div>
+                    <p><strong>Admin:</strong> {society.admin.name}</p>
+                    <p><strong>Email:</strong> {society.admin.email}</p>
+                    <p><strong>Admin Phone:</strong> {society.admin.phone || "Not provided"}</p>
+                    <p><strong>Society Contact:</strong> {society.societyContact || "Not provided"}</p>
+                    <p className="platform-society__address"><strong>Address:</strong> {society.societyAddress || "Not provided"}</p>
                   </div>
                 </article>
               ))}
